@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gdamore/tcell"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/gdamore/tcell"
 )
 
 type Editor struct {
