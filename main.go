@@ -16,7 +16,7 @@ func main() {
 	editor := NewEditor(filename)
 
 	if err := editor.InitScreen(); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to initialize screen: %s\n", err)
+		fmt.Fprintf(os.Stderr, "Failed to initialize screen: %s\n", err)
 		os.Exit(1)
 	}
 

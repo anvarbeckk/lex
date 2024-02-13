@@ -87,7 +87,7 @@ func (e *Editor) saveAndExit() {
 	}
 
 	e.FiniScreen()
-	fmt.Println("Exiting the text editor.")
+	fmt.Println("Exiting the text editor...")
 	os.Exit(0)
 }
 
