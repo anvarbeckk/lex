@@ -3,15 +3,15 @@
 a simple text editor written in golang
 
 ### How to use ?
-1. Install 
+1. clone the repository to your local
 ```bash
-brew install lex
+git clone git@github.com:anvarbeckk/lex.git
 ```
 
-2. setup 
+2. setup
 
 ```
-lex yourfilename
+./lex yourfilename
 ```
 
 3. Save the File:
