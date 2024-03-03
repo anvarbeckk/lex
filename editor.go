@@ -15,6 +15,7 @@ type Editor struct {
 	cursorY  int
 	screen   tcell.Screen
 	filename string
+	focused  bool
 }
 
 func NewEditor(filename string) *Editor {
@@ -92,21 +93,37 @@ func (e *Editor) saveAndExit() {
 }
 
 func (e *Editor) drawScreen() {
-	e.screen.Clear()
+    e.screen.Clear()
 
-	for y, line := range e.content {
-		for x, char := range line {
-			style := tcell.StyleDefault
+    // Toggle cursor visibility based on whether the editor is in "typing mode"
+    cursorVisible := e.focused
 
-			if y == e.cursorY && x == e.cursorX {
-				style = style.Reverse(true)
-			}
+    for y, line := range e.content {
+        // Draw line number
+        lineNumberStr := fmt.Sprintf("%d. ", y+1)
+        for x, char := range lineNumberStr {
+            e.screen.SetContent(x, y, char, nil, tcell.StyleDefault)
+        }
 
-			e.screen.SetContent(x, y, char, nil, style)
-		}
-	}
+        // Draw caret at the cursor position if visible
+        if cursorVisible && y == e.cursorY {
+            cursorX := len(lineNumberStr) + e.cursorX
+            e.screen.SetContent(cursorX, y, '^', nil, tcell.StyleDefault)
+        }
 
-	e.screen.Show()
+        // Draw line content after line number
+        for x, char := range line {
+            style := tcell.StyleDefault
+
+            if y == e.cursorY && x == e.cursorX && cursorVisible {
+                style = style.Reverse(true)
+            }
+
+            e.screen.SetContent(len(lineNumberStr)+1+x, y, char, nil, style)
+        }
+    }
+
+    e.screen.Show()
 }
 
 func (e *Editor) handleKey(event *tcell.EventKey) {
@@ -122,6 +139,8 @@ func (e *Editor) handleKey(event *tcell.EventKey) {
 		e.handleEnter()
 	case tcell.KeyBackspace, tcell.KeyBackspace2:
 		e.handleBackspace()
+	case tcell.KeyTab:
+        e.focused = !e.focused
 	default:
 		char := event.Rune()
 		e.handleChar(char)
@@ -200,6 +219,7 @@ func (e *Editor) drawMessage(message string) {
 	}
 	e.screen.Show()
 }
+
 
 func (e *Editor) printMessageAndExit(message string) {
 	e.screen.Fini()
